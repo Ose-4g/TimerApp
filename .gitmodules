@@ -1,0 +1,3 @@
+[submodule "submodules/command-processor"]
+	path = submodules/command-processor
+	url = git@github.com:Ose-4g/command-processor.git
