@@ -25,7 +25,7 @@ namespace ose4g{
             p_timerThread->join();
         }
         p_timerThread = std::make_unique<std::thread>([this](){
-            while(d_seconds > 0)
+            while(d_seconds > 0 && d_status != Status::DEFAULT)
             {
                 std::unique_lock<std::mutex> lock(d_mtx);
                 if(d_status == Status::PAUSED)
@@ -59,6 +59,7 @@ namespace ose4g{
 
     Timer::~Timer(){
         d_status = Status::DEFAULT;
+        d_cv.notify_all();
         if(p_timerThread && p_timerThread->joinable())
         {
             p_timerThread->join();

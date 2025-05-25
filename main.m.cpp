@@ -43,31 +43,31 @@ int main(){
     cp.add("add-timer",[&clock](const ose4g::Args& args){
         int seconds = ose4g::getSeconds(args[0]);
         clock.addTimer(seconds);
-    }, {&minOneArgumentRule, &validTimeRule});
+    }, {&minOneArgumentRule, &validTimeRule}, "Adds a new timer.\n Usage: add-timer <time> . \ntime is either the total number of seconds or time in the form  \n HH:MM:SS or MM:SS");
 
     cp.add("show-timers",[&clock](const ose4g::Args& args){
         clock.showTimers();
-    });
+    }, "Shows all timers");
 
     cp.add("show-timer",[&clock](const ose4g::Args& args){
         int index = std::stoi(args[0]);
         clock.showTimer(index);
-    },{&minOneArgumentRule, &firstArgumentInteger});
+    },{&minOneArgumentRule, &firstArgumentInteger}, "Usage: show-timer <index> \nShows the timer at given index");
 
     cp.add("pause-timer",[&clock](const ose4g::Args& args){
         int index = std::stoi(args[0]);
         clock.pauseTimer(index);
-    },{&minOneArgumentRule, &firstArgumentInteger});
+    },{&minOneArgumentRule, &firstArgumentInteger}, "Usage: pause-timer <index> \nPauses the timer at given index");
 
     cp.add("remove-timer",[&clock](const ose4g::Args& args){
         int index = std::stoi(args[0]);
         clock.removeTimer(index);
-    },{&minOneArgumentRule, &firstArgumentInteger});
+    },{&minOneArgumentRule, &firstArgumentInteger}, "Usage: remove-timer <index> \nRemoves the timer at given index");
 
     cp.add("resume-timer",[&clock](const ose4g::Args& args){
         int index = std::stoi(args[0]);
         clock.startTimer(index);
-    },{&minOneArgumentRule, &firstArgumentInteger});
+    },{&minOneArgumentRule, &firstArgumentInteger}, "Usage: resume-timer <index> \nResumes the timer at given index");
 
    
     cp.run();
