@@ -12,15 +12,29 @@ namespace ose4g{
             return;
         }
 
+        if(d_status == Status::PAUSED)
+        {
+            d_status = Status::RUNNING;
+            d_cv.notify_all();
+            return;
+        }
+
         d_status =  Status::RUNNING;
         if(p_timerThread && p_timerThread->joinable())
         {
             p_timerThread->join();
         }
         p_timerThread = std::make_unique<std::thread>([this](){
-            while(d_status == Status::RUNNING && d_seconds > 0)
+            while(d_seconds > 0)
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                std::unique_lock<std::mutex> lock(d_mtx);
+                if(d_status == Status::PAUSED)
+                {
+                    d_cv.wait(lock, [this]() {
+                        return d_status != Status::PAUSED;
+                    });
+                }
+                std::this_thread::sleep_for(std::chrono::seconds(1));
                 d_seconds--;
             }
             d_status = Status::DEFAULT;
